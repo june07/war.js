@@ -161,7 +161,7 @@ var createDeck = function() {
 	for (var i = 0; i < 4; i++) {
 		var suit = deck.suits.pop();
 		for (var i2 = 0; i2 < 13; i2++) {		
-			var value = i2+1; 
+			var value = i2+2; 
 			deck.addCard(suit, value);
 		}
 	}
