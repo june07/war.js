@@ -9,7 +9,8 @@ var players = [
   	new Player('michael')
   ],
   rounds = 0,
-  pot = null;
+  pot = null,
+  deck;
 
 function Deck() {
 	this.suits = ['heart', 'diamond', 'club', 'spade'];
@@ -24,6 +25,7 @@ function Deck() {
 function Card(suit, value) {
 	this.suit = suit;
 	this.value = value;
+	this.valsuit = checkIfRoyal(value) + suit.substring(0,1).toUpperCase();
 	this.ascii = null;
 	this.pretty = null;
 
@@ -38,10 +40,10 @@ function Card(suit, value) {
 }
 function checkIfRoyal(cardValue) {
 	switch (cardValue) {
-		case 10: return 'J'; break;
-		case 11: return 'Q'; break;
-		case 12: return 'K'; break;
-		case 13: return 'A'; break;
+		case 11: return 'J'; break;
+		case 12: return 'Q'; break;
+		case 13: return 'K'; break;
+		case 14: return 'A'; break;
 		default: return cardValue;
 	}
 }
@@ -181,19 +183,20 @@ var shuffle = function(deck) {
  		resolve(deck);
  	});
 }
-var deal = function(deck, players) {
+var deal = function(_deck, _players) {
 	return new Promise(function(resolve, reject) {
 		var p = 0;
-		for (var i = 0; i < deck.cards.length; i++) {
-			players[p].cards.push(deck.cards.shift());
+		for (var i = 0; i < _deck.cards.length; i++) {
+			_players[p].cards.push(_deck.cards.shift());
 			p++;
-			if (p == players.length) p = 0;
+			if (p == _players.length) p = 0;
 		}
-		for (var i = 0; i < players.length; i++) {
-			var player = players[i];
+		for (var i = 0; i < _players.length; i++) {
+			var player = _players[i];
 			console.log('Player ' + player.name + '\'s hand: ' + player.showCards());
 		}
-
+		deck = _deck;
+		players = _players;
  		resolve();
  	});
 }
@@ -224,9 +227,10 @@ var consolePlay = function() {
 			var player = players[i];
 			console.log('Player ' + player.name + ': ' + player.cards);
 	}
+
 	shuffle(createDeck())
-	.then(function(deck) {
-		return deal(deck, players);
+	.then(function(d) {
+		return deal(d, players);
 	})
 	.then(function() {
 		return play(players);
@@ -237,26 +241,33 @@ var consolePlay = function() {
 }();
 
 function setupREST(config) {
+	console.log('Config: ');
 	console.dir(config);
 	players = config.players;
 	rounds = config.rounds;
 
 	console.log('Setup game for ' + players.length + ' players.');
 	console.log('Setup game to play ' + rounds + ' rounds.');
-	return 'Setup game to play ' + rounds + ' rounds.'
+	return 'Setup complete.'
 }
 function shuffleREST() {
 	var deckPromise = createDeck();
 	deckPromise = shuffle(deckPromise);
 
-	deckPromise.then(function(deck) {
+	return deckPromise.then(function(_deck) {
+		var json = JSON.stringify(_deck);
+		deck = _deck;
 		console.log('Created new deck of cards.');
-		console.dir(deck);
-		return JSON.stringify(deck);
+		
+		return json;
 	});
 }
 function dealREST() {
-	return "dealREST ran!";
+	return deal(deck, players).then(function() {
+		console.log('Dealt players cards.');
+		console.dir(players);
+		return JSON.stringify(players);
+	});
 }
 function playREST() {
 	return "playREST ran!";
