@@ -30,3 +30,20 @@ body > div > section:nth-child(11) {
 .card { background: white; height: 100px; width: 50px; padding: 3px; box-shadow: 5px 5px 5px grey; border-style: solid; border-width: 1px; border-radius: 5px }
 .carddeck { position: relative; top: 100px; width: 70%; height: 50%; margin: auto; }
 .playerhand { position: relative; top: 20px; width: 90%; height: 50%; margin: auto; }
+.play {
+  float: right;
+}
+table {
+  width: 100%;
+}
+table, th , td {
+  border: 1px solid grey;
+  border-collapse: collapse;
+  padding: 1px;
+}
+table tr:nth-child(odd) {
+  background-color: #e6ffe6;
+}
+table tr:nth-child(even) {
+  background-color: #ffffff;
+}

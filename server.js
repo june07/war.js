@@ -41,7 +41,7 @@ app.get('/war/deal', function (req, res) {
  	});
 })
 app.get('/war/play', function (req, res) {
-	var playResponse = war.play()
+	war.play()
 	.then(function(pot) {
  		res.send(pot);
  	});

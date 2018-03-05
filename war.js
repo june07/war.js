@@ -164,11 +164,13 @@ var getWinner = function(callback) {
 		if (i === players.length-1) callback(winner);
 	});
 }
-var gameOver = function() {
+var gameOver = function(cb) {
 	//console.log('Player ' + players[0].name + ' won!');
 	getWinner(function(winner) {
 		console.log('Player ' + winner.name + ' won!');
+		pot.winner = winner;
 		pot.showHistory();
+		return cb();
 	});
 }
 var award = function(pot) {
@@ -216,10 +218,11 @@ var deal = function(_deck, _players) {
  	});
 }
 var play = function(players) {
-	pot = new Pot();
-
 	return new Promise(function(resolve) {
+		pot = new Pot();
+
 		while (rounds < 100) {
+			console.dir(rounds);
 			for (var i = 0; i < players.length; i++) {
 				var player = players[i];
 				if (i == players.length-1) {
@@ -229,8 +232,9 @@ var play = function(players) {
 				}
 			}
 			if (players.length === 1 || rounds === 99) {
-				gameOver();
-				return resolve('Thanks for playing.');
+				return gameOver(function() {
+					resolve('Thanks for playing.');
+				});
 			}
 			rounds++;
 		}
@@ -252,24 +256,25 @@ var consolePlay = function() {
 	.then(function(gameOverMessage) {
 		console.log(gameOverMessage);
 	});
-}();
-function initPlayers(config) {
+};
+function initPlayers(config, callback) {
 	var playerObjects = [];
 	config.forEach(function(playerConfig, i, playersConfig) {
 		playerObjects.push(new Player(playerConfig.name));
 		if (i === playersConfig.length-1) players = playerObjects;
 	});
+	callback();
 }
 function setupREST(config) {
 	console.log('Config: ');
 	console.dir(config);
 	initPlayers(config.players, function() {
-		rounds = config.rounds;
+		rounds = 0;
 		pot = null;
-		deck = null;
+		deck = [];
 
 		console.log('Setup game for ' + players.length + ' players.');
-		console.log('Setup game to play ' + rounds + ' rounds.');
+		console.log('Setup game to play ' + config.rounds + ' rounds.');
 		return 'Setup complete.'
 	});
 }
@@ -293,9 +298,9 @@ function dealREST() {
 	});
 }
 function playREST() {
-	return play(players).then(function() {
+	return play(players).then(function(response) {
 		console.log('Playing taking their turns.');
-		console.dir(pot);
+		console.log('Play response: ' + response);
 		return JSON.stringify(pot);
 	});
 }

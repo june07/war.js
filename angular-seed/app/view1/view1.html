@@ -52,12 +52,38 @@
   <section layout="row" flex layout-padding layout-margin >
     <div layout="column" flex class="control">
     	<center>
-    		<button ng-click="play()">Play Hand</button>
-    		<button ng-click="startgame()">Play Again</button>
+    		<button ng-if="!again" ng-click="play()">Play Hand</button>
+    		<button ng-if="again" ng-click="startgame()">Play Again</button>
     	</center>
     </div>
     <div layout="column" flex class="stats">
     	{{ messages }}
+    	<table>
+    	  <th>Round</th><th>Play</th><th>Round Winner</th><th>Pot</th>
+		  <tr ng-repeat="history in pot.history">
+		    <td>{{ history.round }}</td>
+		    <td>
+	    		<table>
+	    			<tr ng-repeat="play in history.plays">
+		    			<td>
+		    				{{ play.whos }}
+		    				{{ play.card.pretty }}
+		    				with {{ play.remaining }} cards remaining.
+		    			</td>
+		    		</tr>
+	    		</table>
+			</td>
+		    <td>{{ history.taker }}</td>
+		    <td>
+		    	<table>
+		    		<tr ng-repeat="pot in history.taken">
+		    			<td>{{ pot.pretty }}</td>
+		    		</tr>
+		    	</table>
+		   	</td>
+		  </tr>
+		</table>
+
     </div>
   </section>
 </body>

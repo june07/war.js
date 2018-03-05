@@ -47,7 +47,9 @@ angular.module('warApp.view1', ['ngRoute'])
 	function play() {
 		$http.get('http://localhost:3000/war/play')
         .then(function(response) {
-			$scope.players = response.data;
+			$scope.pot = response.data;
+			$scope.messages = $scope.pot.winner.name + ' won!';
+			$scope.again = true;
         });
 	}
 	function startgame() {
@@ -55,6 +57,7 @@ angular.module('warApp.view1', ['ngRoute'])
 		$scope.players = [];
 		$scope.playconfig = {"players":[{"name":"adrian"},{"name":"aaliyah"},{"name":"vivian"},{"name":"michael"}],"rounds":99};
 		$scope.messages = 'Shuffling the deck...';
+		$scope.again = false;
 
 		setup();
 		$timeout(function() {
