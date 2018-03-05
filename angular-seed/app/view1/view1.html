@@ -1,0 +1,55 @@
+<html lang="en" >
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+  <link rel="stylesheet" type="text/css" href="app.css">
+</head>
+<body ng-app="warApp" ng-cloak>
+  <!--
+    Your HTML content here
+  -->  
+  
+  <!-- Angular Material requires Angular.js Libraries -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+  <!-- Angular Material Library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+  
+  <!-- Your application bootstrap  -->
+  <script type="text/javascript">    
+    /**
+     * You must include the dependency on 'ngMaterial' 
+     */
+    angular.module('warApp', ['ngMaterial']);
+  </script>
+  
+  <section layout="row" flex layout-padding layout-margin >
+    <div class="pot">
+    	<div class="carddeck">
+    		<div class="" ng-repeat="card in deck.cards" style="position:absolute" ng-style="{'z-index':$index, 'left':15*$index+'px'}">
+    			<img height="250px" width="100px" src="{{ card.imgsrc }}"></img>
+    		</div>
+    	</div>
+    </div>
+  </section>
+  
+  <section layout="row" flex layout-padding layout-margin >
+    <div ng-repeat="player in playconfig.players" ng-class="'player'+($index+1)">{{ player.name }}</div>
+  </section>
+
+  <section layout="row" flex layout-padding layout-margin >
+    <div class="stats">
+    	{{ messages }}
+    </div>
+  </section>
+</body>
+</html>
+
+<!--
+Copyright 2016 Google Inc. All Rights Reserved. 
+Use of this source code is governed by an MIT-style license that can be in foundin the LICENSE file at https://material.angularjs.org/license.
+-->
