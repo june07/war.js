@@ -186,7 +186,7 @@ var shuffle = function(deck) {
 var deal = function(_deck, _players) {
 	return new Promise(function(resolve, reject) {
 		var p = 0;
-		for (var i = 0; i < _deck.cards.length; i++) {
+		for (var i = 0; i < 52; i++) {
 			_players[p].cards.push(_deck.cards.shift());
 			p++;
 			if (p == _players.length) p = 0;
@@ -239,16 +239,25 @@ var consolePlay = function() {
 		console.log(gameOverMessage);
 	});
 }();
-
+function initPlayers(config) {
+	var playerObjects = [];
+	config.forEach(function(playerConfig, i, playersConfig) {
+		playerObjects.push(new Player(playerConfig.name));
+		if (i === playersConfig.length-1) players = playerObjects;
+	});
+}
 function setupREST(config) {
 	console.log('Config: ');
 	console.dir(config);
-	players = config.players;
-	rounds = config.rounds;
+	initPlayers(config.players, function() {
+		rounds = config.rounds;
+		pot = null;
+		deck = null;
 
-	console.log('Setup game for ' + players.length + ' players.');
-	console.log('Setup game to play ' + rounds + ' rounds.');
-	return 'Setup complete.'
+		console.log('Setup game for ' + players.length + ' players.');
+		console.log('Setup game to play ' + rounds + ' rounds.');
+		return 'Setup complete.'
+	});
 }
 function shuffleREST() {
 	var deckPromise = createDeck();
