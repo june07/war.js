@@ -29,20 +29,34 @@
   
   <section layout="row" flex layout-padding layout-margin >
     <div class="pot">
+    	Pot
     	<div class="carddeck">
     		<div class="" ng-repeat="card in deck.cards" style="position:absolute" ng-style="{'z-index':$index, 'left':15*$index+'px'}">
-    			<img height="250px" width="100px" src="{{ card.imgsrc }}"></img>
+    			<img height="250px" width="100px" ng-src="{{ card.imgsrc }}"></img>
     		</div>
     	</div>
     </div>
   </section>
   
   <section layout="row" flex layout-padding layout-margin >
-    <div ng-repeat="player in playconfig.players" ng-class="'player'+($index+1)">{{ player.name }}</div>
+    <div ng-repeat="player in playconfig.players" ng-class="'player'+($index+1)">{{ player.name }}
+		<div class="playerhand">
+    		<div ng-repeat="card in getPlayersCards(player)" style="position:absolute" ng-style="{'z-index':$index, 'left':15*$index+'px'}">
+    			<img height="100px" width="50px" ng-src="{{ card.imgsrc }}"></img>
+    		</div>
+    	</div>
+    </div>
+
   </section>
 
   <section layout="row" flex layout-padding layout-margin >
-    <div class="stats">
+    <div layout="column" flex class="control">
+    	<center>
+    		<button ng-click="play()">Play Hand</button>
+    		<button ng-click="startgame()">Play Again</button>
+    	</center>
+    </div>
+    <div layout="column" flex class="stats">
     	{{ messages }}
     </div>
   </section>

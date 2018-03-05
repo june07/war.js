@@ -41,8 +41,10 @@ app.get('/war/deal', function (req, res) {
  	});
 })
 app.get('/war/play', function (req, res) {
-	var playResponse = war.shuffle();
- 	res.send(playResponse);
+	var playResponse = war.play()
+	.then(function(pot) {
+ 		res.send(pot);
+ 	});
 })
  
 var server = http.createServer(app)

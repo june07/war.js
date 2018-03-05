@@ -152,9 +152,24 @@ var winlose = function() {
 		}
 	}
 }
+var getWinner = function(callback) {
+	var winningcards = 0;
+	var winner;
+
+	players.forEach(function(player, i) {
+		if (player.cards.length > winningcards) {
+			winningcards = player.cards.length;
+			winner = player;
+		}
+		if (i === players.length-1) callback(winner);
+	});
+}
 var gameOver = function() {
-	console.log('Player ' + players[0].name + ' won!');
-	pot.showHistory();
+	//console.log('Player ' + players[0].name + ' won!');
+	getWinner(function(winner) {
+		console.log('Player ' + winner.name + ' won!');
+		pot.showHistory();
+	});
 }
 var award = function(pot) {
 	players.find(function(player) {
@@ -203,7 +218,7 @@ var deal = function(_deck, _players) {
 var play = function(players) {
 	pot = new Pot();
 
-	return new Promise(function(resolve, reject) {
+	return new Promise(function(resolve) {
 		while (rounds < 100) {
 			for (var i = 0; i < players.length; i++) {
 				var player = players[i];
@@ -219,7 +234,6 @@ var play = function(players) {
 			}
 			rounds++;
 		}
- 		reject('WTF?!');
  	});
 }
 var consolePlay = function() {
@@ -279,7 +293,11 @@ function dealREST() {
 	});
 }
 function playREST() {
-	return "playREST ran!";
+	return play(players).then(function() {
+		console.log('Playing taking their turns.');
+		console.dir(pot);
+		return JSON.stringify(pot);
+	});
 }
 module.exports = {
 	setup: setupREST,
